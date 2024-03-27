@@ -1,5 +1,5 @@
 import express from 'express';
-import router1 from './routes/userControllerRoute';
+import router1 from './routes/userControllerRoute.js';
 import dotenv from 'dotenv';
 import cookieParser  from 'cookie-parser';
 
@@ -12,3 +12,4 @@ app.listen(process.env.PORT,()=>{
 
     console.log(`listening to port ${process.env.PORT}`);
 })
+console.log(process.env.PORT);

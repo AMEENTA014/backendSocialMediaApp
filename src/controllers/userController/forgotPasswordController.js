@@ -1,41 +1,13 @@
-import nodemailer from 'nodemailer';
-import dotenv from 'dotenv';
-import {getUserByEmailModel,updateUserModel} from '../../models/userModel';
-import bcrypt from 'bcrypt';
-dotenv.config();
-
-export async function forgotPasswordController(req, res) {
+import * as userModels from '../../models/userModels/index.js';
+import * as middleWares from '../../middleWares/index.js'
+export const forgotPasswordController=async(req, res)=>{
     const {email} = req.body;
-  
-   
-    const user = await getUserByEmailModel({ email });
+    const user = await userModels.getUserByEmailModel({ email });
     if (!user) {
       return res.status(400).send({error: "User does not exist"});
     }
-
-
-
-
-
-
-
-
-    const transporter = nodemailer.createTransport({
-        service: 'Gmail',
-        auth: {
-          user: process.env.EMAIL,
-          pass: process.env.pass
-        }
-      });
-
-
-
-      const mailOptions = {
-        to: user.email,
-        from: '',
-        subject: 'Password Reset',
-        text: 'helloBro'
-      };
-    
-
+    const resetPassToken=middleWares.generateResetToken();
+    // waiting for redis setup userModels.updateUserModel();
+    middleWares.sendMail(user,resetPassToken);   
 }
+

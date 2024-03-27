@@ -2,11 +2,12 @@
   "name": "socialmediaapp",
   "version": "1.0.0",
   "description": "",
-  "main": "main.js",
+  "main": "./src/main.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node main.js"
+    "start": "node main.js",
+    "dev": "nodemon main.js"
   },
   "author": "",
   "license": "ISC",
@@ -14,11 +15,13 @@
     "@prisma/client": "^5.11.0",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.6",
+    "crypto": "^1.0.1",
     "dotenv": "^16.4.5",
     "express": "^4.19.1",
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^6.9.13",
     "nodemon": "^3.1.0",
-    "prisma": "^5.11.0"
+    "prisma": "^5.11.0",
+    "speakeasy": "^2.0.0"
   }
 }

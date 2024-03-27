@@ -9,10 +9,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 model User {
-  userId        String   @id @default(uuid())
+  userId        String  @id @default(uuid())
   userName      String?
   email         String   @unique
-  firstName     String
+  firstName     String?
   lastName      String?
   password      String
   profilePicLink String?
@@ -25,10 +25,92 @@ model User {
   role          Role     @default(USER)
   contactInfo   String?
   DOB           String?
+  tasks         Task[]
+  applications  Application[]
+  sentMessages        Message[] @relation("sendby")
+  recievedMessages    Message[] @relation("recieby")
+  posts               Post[]
+  likes               Like[]
+  comments            Comment[]
+} 
+
+model Task {
+  taskId        String     @id @default(uuid())
+  title         String
+  description   String?
+  owner         User?    @relation(fields: [ownerId], references: [userId])
+  ownerId       String?
+  deadline      DateTime?
+  status        Status    @default(OPEN)
+  points        Int?
+  createdAt     DateTime  @default(now())
+  applications  Application[]
+  
+}
+model Application {
+applicationId   String @id @default(uuid())
+taskApplied     Task   @relation(fields: [taskId], references: [taskId])
+taskId          String 
+userApplied     User   @relation(fields: [userId],references: [userId])
+userId          String
+status          Status @default(OPEN)
+applicationDate DateTime
+}
+model Message{
+messageId String   @id @default(uuid())
+sender    User?    @relation("sendby", fields: [senderId],references: [userId])
+senderId  String
+reciever  User?    @relation("recieby",fields: [receiverId],references: [userId])
+receiverId String
+message   String
+timeStamp DateTime
+}
+model Post{
+postId      String @id @default(uuid())
+userPost    User  @relation(fields: [userId],references: [userId])
+userId      String
+content     Json
+timeStamp   DateTime
+likes       Like[]
+comments    Comment[]
+}
+model Like{
+  likeId      String @id @default(uuid())
+  postLike    Post  @relation(fields: [postId],references: [postId]) 
+  postId      String
+  userLike    User  @relation(fields: [userId],references: [userId])
+  userId      String
+  Timestamp   DateTime
+}
+model Comment{
+ commentId    String @id @default(uuid())
+ postComment  Post   @relation(fields: [postId],references: [postId])
+ postId       String
+ userComment  User   @relation(fields: [userId],references: [userId])
+ userId       String
+ content      String
+ timestamp    DateTime
+
+
+}
+model Submission {
+ submissionId       String  @id @default(uuid())
+ taskId             String
+ userId             String
+ submissionDate     DateTime
+ feedback           String
+ rating             Int
+ pointsAwarded      Float
+
 }
 
 enum Role{
 USER
 ADMIN
 
+}
+enum Status{
+ OPEN
+ IN_PROGRESS
+ COMPLETED
 }
