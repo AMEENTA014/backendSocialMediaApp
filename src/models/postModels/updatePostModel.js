@@ -1,24 +1,20 @@
-import {prisma}from '../prisma'
-export const updatePostModel=async(postData)=>
+import {prisma}from '../prisma.js'
+export const updatePostModel=async(postId,postData)=>
 {
     try
     {
-    const updatedPost= await prisma.post.update({
+    return await prisma.post.update({
       where: 
       {
-        id:postData.id
+        postId:postId
       },
-      data: 
-      {
-        title:postData.title,
-        content:postData.content
-      },
+      data:postData
+      
     });
-    return updatedPost;
     }
     catch(err)
     {
-     throw err
+     throw new Error('dataBaseError'+err.message);
     }
 }
   

@@ -80,7 +80,7 @@ model Like{
   postId      String
   userLike    User  @relation(fields: [userId],references: [userId])
   userId      String
-  Timestamp   DateTime
+  timestamp   DateTime
 }
 model Comment{
  commentId    String @id @default(uuid())
@@ -100,11 +100,12 @@ model Submission {
  submissionDate     DateTime
  feedback           String
  rating             Int
- pointsAwarded      Float
+ pointsAwarded      Int
 
 }
 
 enum Role{
+FACULTY
 USER
 ADMIN
 

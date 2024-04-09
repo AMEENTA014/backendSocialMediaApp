@@ -1,0 +1,10 @@
+import express from 'express';
+import * as likeController from '../controllers/likeController/index.js';
+import * as middleWares    from '../middleWares/index.js';
+import { servErr } from './servErr.js';
+const router=express.Router();
+router.use(servErr);
+router.post('/create/:userId/:postId',middleWares.authenticate,likeController.createLikeController);
+router.delete('/delete/:userId/:likeId',middleWares.authenticate,likeController.deleteLikeController);
+router.get('/getAllLikes/:postId',middleWares.authenticate,likeController.getAllLikesController);
+export default router ;

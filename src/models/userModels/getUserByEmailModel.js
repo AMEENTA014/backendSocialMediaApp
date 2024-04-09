@@ -1,14 +1,8 @@
 import {prisma} from '../prisma.js'
-
-
 export async function getUserByEmailModel(email) {
   try{
-   const User=await prisma.user.findUnique({ where: { email:email } })
-   return User;
-    }  
-    catch(err)
-    {
-      throw err
-    };
-  
+  return await prisma.user.findUnique({ where: { email:email } })
+  }catch(err){
+    throw new Error(`DataBaseError${err.message}`);
+  }
 }

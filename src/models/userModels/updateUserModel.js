@@ -3,13 +3,10 @@ export async function updateUserModel(userId, userData)
 {
     try
     {
-    const updatedUser=await prisma.user.update({ where: { id: userId }, data: userData })
-     return updatedUser;
+    return await prisma.user.update({ where: { userId: userId }, data: userData })
       }
       catch(err)
         {
-         throw err;
+         throw new Error("DatabaseError"+err.message)
         }
   }
-
-  

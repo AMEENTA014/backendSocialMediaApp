@@ -1,17 +1,15 @@
-import {prisma}from '../.js'
+import {prisma}from '../prisma.js'
 export const deletePostModel=async(postId)=>
   {
     try{
-    const deletedPost= await prisma.post.delete({
+    return deletedPost= await prisma.post.delete({
       where: 
       {
-        postId
+        postId:postId
       },
     });
-    return deletedPost;
-  }
-    catch(err)
+  }catch(err)
     {
-      throw err
+      throw new Error('dataBaseError'+err.message);
     }
   }

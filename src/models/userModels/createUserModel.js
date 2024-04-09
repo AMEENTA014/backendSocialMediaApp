@@ -1,20 +1,20 @@
 import {prisma}from '../prisma.js'
-
-export async function createUserModel(user) 
+import {Role}from '@prisma/client'
+export const  createUserModel=async(user)=> 
 { 
-  try
-  {
-    const createdUser= await prisma.user.create({ data: 
+  try{
+     if (!Object.values(Role).includes(user.role)) {
+        throw new Error(`Invalid role: ${user.role}`);
+    }
+     return await prisma.user.create({ data: 
       {
       email   : user.email,
       userName: user.userName,
-      password:user.password
+      password:user.password,
+      role:user.role
       }
     })
-    return createdUser;
+  }catch(err){
+    throw new Error("databaseError"+err.message);
   }
-    catch(err)
-    {
-      throw err;   
-    };
- } 
+}

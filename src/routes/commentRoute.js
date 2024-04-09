@@ -1,0 +1,12 @@
+import express from 'express';
+import * as commentController from '../controllers/commentController/index.js';
+import * as middleWares from '../middleWares/index.js';
+import { servErr } from './servErr.js';
+const router=express.Router();
+router.use(servErr);
+router.post('/create',middleWares.authenticate,commentController.createCommentController);
+router.put('/update',middleWares.authenticate,commentController.updateCommentController);
+router.delete('/delete/:userId/:commentId',middleWares.authenticate,commentController.deleteCommentController);
+router.get('/allUserComment/:userId',middleWares.authenticate,commentController.getAllUserCommentController);
+router.get('/allComment/:postId',middleWares.authenticate,commentController.getAllComment);
+export default router;

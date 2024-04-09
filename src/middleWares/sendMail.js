@@ -1,26 +1,25 @@
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
-dotenv.config();
-export const sendMail=(user,token)=>{
+dotenv.config({path:"../../.env"});
+export const sendEMail=async(email,subject,message)=>{
     const transporter = nodemailer.createTransport({
-    service: 'Gmail',
+    service: 'gmail',
     auth: {
       user: process.env.MYMAIL,
-      pass: process.env.PASS
+      pass: process.env.MAILPASS
     }
   });
   const mailOptions = {
-    to: user.email,
+    to: email,
     from: process.env.MYMAIL,
-    subject: 'Password Reset',
-    text: `${process.env.LINKFORRESET}/${token}`
+    subject: subject,
+    text: message
   };
-
-transporter.sendMail(mailOptions, function(err) {
-if (err) {
-  return res.status(500).send({error: 'Failed to send email'});
-}
-
-res.status(200).send({message: 'Reset link sent to your email'});
-});
-}
+    return transporter.sendMail(mailOptions)
+      .then(() => {
+        return {message: 'Reset link sent to your email'};
+      })
+      .catch(error => {
+        throw new Error("error in mailSending" + error.message);
+      });
+  }
