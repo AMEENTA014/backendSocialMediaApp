@@ -16,17 +16,12 @@ export const forgotPasswordController=async(req, res,next)=>{
         err.status=400;
         return next(err);  
     }
-          const {otp,secret}=await middleWares.generateOtp();
-          const id=await middleWares.generateUniqueId();
-          await setValue(await cacheServerPromise,id, JSON.stringify({
-            otp:otp,
-            email:email,
-            secret:secret,
-            action:'signUp'
-          }));
-          await setExpire(await cacheServerPromise,id,600);
-          const message=`your otp is ${otp}.click this link for password reset or signup ${process.env.VERIFYLINK}?id=${id}`;
-          res.status(200).send( await middleWares.sendEMail(email,'forgotPass',message));
+    const resetId = await middleWares.generateUniqueId();
+    await setValue(await cacheServerPromise,resetId, JSON.stringify({ email: email,userId:user.userId }));
+    await setExpire(await cacheServerPromise,resetId, 600); 
+    const resetLink = `${process.env.RESETLINK}/${resetId}`;
+    await middleWares.sendEMail(email,'resetPass',`Click this link to reset your password: ${resetLink}`);
+    res.status(200).send({ message: "ResetLinkSent" });
      }catch(err){
      return next(err);
     }

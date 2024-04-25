@@ -20,7 +20,6 @@ let  {email,password}=req.body;
     err.status=400;
      return next(err); 
      }
-    
   res.status(200).cookie('token',await middleWares.createToken(user),{httpOnly:true}).send('LoginSuccess');
     }catch(err){
     next(err);

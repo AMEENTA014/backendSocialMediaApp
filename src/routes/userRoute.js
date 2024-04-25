@@ -6,7 +6,7 @@ import * as middleWares from '../middleWares/index.js';
 import { servErr } from './servErr.js';
 
 router.use(servErr);
-
+router.post('gSignIn',userController.googleSignInController);
 router.get('/getAll',middleWares.authenticate,userController.getAllUserController);
 router.post('/signUp', userController.signUpUserController);
 router.post('/login', userController.loginUserController);

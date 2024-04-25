@@ -28,7 +28,7 @@ export const signUpUserController=async(req,res,next)=>{
         action:'signUp'
       }));
       await setExpire(await cacheServerPromise,id,600);
-      const message=`your otp is ${otp}.click this link for password reset or signup ${process.env.VERIFYLINK}?id=${id}`
+      const message=`your otp is ${otp}.click this link for signup verification  ${process.env.VERIFYLINK}?id=${id}`
       const sentMail=await middleWares.sendEMail(email,'signupVerify',message) ;
       res.status(200).send(sentMail);
     }

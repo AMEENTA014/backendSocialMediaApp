@@ -6,6 +6,11 @@ import {prisma}from '../prisma.js';
       where: {
         userId:userId
       },
+      include:{
+        likes:true,
+        comments:true,
+        
+      }
     });
       }catch(err)
       {

@@ -7,7 +7,6 @@ export const deleteLikeController=async(req,res,next)=>{
         return next(err);
     }
     try{
-        console.log(req.roleData.userId,userId)
         if ((req.roleData.userId !==userId)) {
             const err = new Error('Forbidden');
             err.status = 403;

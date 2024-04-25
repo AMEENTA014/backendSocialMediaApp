@@ -8,5 +8,6 @@ export  * from './verifyController.js';
 export  * from './resetPassVerifyController.js';
 export  * from './getLeaderBoard.js';
 export  * from './getAllUserController.js';
+export  * from './googleSignIn.js';
 
 

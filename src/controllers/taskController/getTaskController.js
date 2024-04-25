@@ -1,6 +1,6 @@
 import { getTaskModel } from "../../models/taskModels/index.js";
 export const getTaskController = async (req, res, next) => {
-    const { taskId } = req.params;
+    const { taskId } = req.body;
     try {
         const task = await getTaskModel(taskId);
         if (!task) {

@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import dotenv from 'dotenv';
 import cookieParser  from 'cookie-parser';
 import {createClient} from 'redis';
@@ -8,7 +9,9 @@ import routerPost from './routes/postRoute.js';
 import routerLike from './routes/likeRoute.js';
 import routerComment from './routes/commentRoute.js';
 import routerTask from './routes/taskRoute.js';
+import routerApplication from './routes/appRoute.js';
 const app=express();
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 app.use('/api/User',routerUser);
@@ -16,6 +19,7 @@ app.use('/api/Post',routerPost);
 app.use('/api/Like',routerLike);
 app.use('/api/Comment',routerComment);
 app.use('/api/Task',routerTask)
+app.use('/api/App',routerApplication);
 
 let cacheServerPromise;
 const  initializeRedisClient = async () => {

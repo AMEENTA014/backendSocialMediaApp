@@ -28,14 +28,8 @@ if (data.action === 'signUp') {
   password:data.pass,
   role:data.role
 }
-  res.status(201).send(await createUserModel(userData));
-} else if (data.action === 'forgot_pass') {
-  const resetId = await middleWares.generateUniqueId();
-   await setValue(await cacheServerPromise,resetId, JSON.stringify({ email: data.email }));
-   await setExpire(await cacheServerPromise,resetId, 600); 
-   const resetLink = `${process.env.RESETLINK}/${resetId}`;
-   await middleWares.sendEMail(data.email,'resetPass',`Click this link to reset your password: ${resetLink}`);
-   res.status(200).send({ message: "ResetLinkSent" });
+  await createUserModel(userData)
+  res.status(200).cookie('token',await middleWares.createToken(userData),{httpOnly:true}).send('signUpSuccessLoginned');
 }
   }
       catch(err) {

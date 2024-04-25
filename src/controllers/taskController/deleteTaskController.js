@@ -1,6 +1,6 @@
 import {deleteTaskModel,getTaskModel} from '../../models/taskModels/index.js';
 export const deleteTaskController=async(req,res,next)=>{
-    const {userId,taskId}=req.params;
+    const {userId,taskId}=req.body;
     if(!taskId||!userId){
     const err=new Error("taskIdOrUserIdNotProvided");
     err.status=400;

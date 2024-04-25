@@ -1,6 +1,6 @@
 import { getAllTasksModel } from "../../models/taskModels/getAllTask.js";
 export const getAllTasksController = async (req, res, next) => {
-    const { userId } = req.params;
+    const { userId } = req.body;
     try {
         const tasks = await getAllTasksModel(userId);
         if (!tasks) {

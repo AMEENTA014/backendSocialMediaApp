@@ -3,17 +3,11 @@ import { getValue, isExpired } from '../../models/redis/redis.js';
 import { hashPass } from '../../middleWares/index.js';
 import {cacheServerPromise} from '../../main.js';
 export const verifyResetPasswordController = async (req, res, next) => {
-    const {userId,resetId, newPassword } = req.body;
+    const {resetId, newPassword } = req.body;
     
-    if (!resetId || !newPassword|| !userId) {
-        const err = new Error("Reset ID, new password, and user ID are required.");
+    if (!resetId || !newPassword) {
+        const err = new Error("Reset ID, new password?");
         err.status = 400;
-        return next(err);
-    }
-    if(userId !==req.roleData.userId)
-    {
-        const err = new Error("Forbidden");
-        err.status = 403;
         return next(err);
     }
     try {
@@ -22,7 +16,6 @@ export const verifyResetPasswordController = async (req, res, next) => {
             err.status = 400;
             return next(err);
         }
-        
         const data = JSON.parse(await getValue(await cacheServerPromise,resetId));
         const updatedUser = await userModels.updateUserModel(data.userId, { password: await hashPass(newPassword) });
         
