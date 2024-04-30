@@ -1,28 +1,31 @@
 import {prisma}from '../prisma.js'
-export const getAllUsersPostModel=async()=>
+export const userAllPostWLAC=async(userId)=>
  {
     try
     {
         const postsWithUserDetailsAndLikes = await prisma.post.findMany({
+            where:{
+               userId:userId 
+            },
             include: {
-              userPost: true, // Include the user details associated with each post
-              likes: true, // Include the likes associated with each post
+              userPost: true, 
+              likes: true, 
               comments: {
                 include: {
-                  userComment: true, // Include the user details associated with each comment
+                  userComment: true, 
                 },
               },
             },
           });
         
-          // Transform the response to include only necessary data
+          
         return postsWithUserDetailsAndLikes.map((post) => ({
             id: post.postId,
             content: post.content,
             link: post.link,
             timestamp: post.timeStamp,
             thumbnail: post.thumbnail,
-            likes: post.likes, // Include the likes associated with each post
+            likes: post.likes, 
             comments: post.comments.map((comment) => ({
               id: comment.commentId,
               content: comment.content,

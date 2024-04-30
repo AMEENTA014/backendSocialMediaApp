@@ -1,8 +1,8 @@
 import { prisma } from "../prisma.js";
-export const getAllUserSubModel=async(userId)=>{
+export const getTaskAllSubModel=async(taskId)=>{
    try {
        return await prisma.submission.findMany({where:{
-        userId:userId
+        taskId:taskId
       }});
    }catch(err){
       throw new Error("databaseError")

@@ -1,16 +1,16 @@
 import { prisma } from '../prisma.js';
-export const getAllTaskAppModel = async (taskId) => {
+export const getAppWTAU = async (appId) => {
   try {
-    const applicationsWithUserAndTaskDetails = await prisma.application.findMany({
+    const application = await prisma.application.findUnique({
       where: {
-        taskId: taskId
+        applicationId:appId
       },
       include: {
         userApplied: true, 
         taskApplied: true 
       },
     });    
-    return applicationsWithUserAndTaskDetails.map((application) => ({
+    return  {
       id: application.applicationId,
       status: application.status,
       applicationDate: application.applicationDate,
@@ -27,7 +27,7 @@ export const getAllTaskAppModel = async (taskId) => {
         name: application.userApplied.email,
         profile_link: application.userApplied.profilePicLink
       },
-    }));
+    };
   } catch (err) {
     throw new Error("Database error: " + err.message);
   }

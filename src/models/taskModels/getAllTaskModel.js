@@ -1,5 +1,5 @@
 import { prisma } from "../prisma.js";
-export const getAllUserTasksModel = async() => {
+export const getAllTaskModel = async() => {
     try {
         return await prisma.task.findMany();
     } catch(err) {

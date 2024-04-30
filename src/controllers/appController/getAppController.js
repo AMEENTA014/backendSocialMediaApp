@@ -1,12 +1,15 @@
-import {getAppModel} from "../../models/applicationModels/index.js";
+import {getAppModel,getAppWTAU} from "../../models/applicationModels/index.js";
 export const getAppController = async (req, res, next) => {
-    const { appId } = req.body;
+    const { appId,code } = req.body;
     try {
         const app = await getAppModel(appId);
         if (!app) {
             const err = new Error('applicationNotfound');
             err.status = 404;
             return next(err);
+        }
+        if(code){
+            res.status(200).send( res.status(200).send(await getAppWTAU(appId)));
         }
         res.status(200).send(app);
     } catch (err) {

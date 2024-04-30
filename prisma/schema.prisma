@@ -26,27 +26,31 @@ model User {
   role          Role     @default(USER)
   contactInfo   String?
   DOB           String?
-  tasks         Task[]
+  tasks         Task[] @relation("owner")
+  selectedTask   Task[]   @relation("select")
   applications  Application[]
   sentMessages        Message[] @relation("sendby")
   recievedMessages    Message[] @relation("recieby")
   posts               Post[]
   likes               Like[]
   comments            Comment[]
+  submissions         Submission[]
 } 
 
 model Task {
   taskId        String     @id @default(uuid())
   title         String
   description   String?
-  owner         User?    @relation(fields: [ownerId], references: [userId])
+  owner         User?    @relation("owner",fields: [ownerId], references: [userId])
   ownerId       String?
   deadline      DateTime?
+  selectedUser  String?  
+  selectRelation   User?    @relation("select",fields: [selectedUser], references: [userId])
   status        Status    @default(OPEN)
   points        Int?
   createdAt     DateTime  @default(now())
   applications  Application[]
-  
+  submissions   Submission?
 }
 model Application {
 applicationId   String @id @default(uuid())
@@ -54,17 +58,18 @@ taskApplied     Task   @relation(fields: [taskId], references: [taskId])
 taskId          String 
 userApplied     User   @relation(fields: [userId],references: [userId])
 userId          String
-status          Statuss @default(APPLIED)
+status          AppStatus@default(APPLIED)
 applicationDate DateTime
 }
-model Message{
-messageId String   @id @default(uuid())
-sender    User?    @relation("sendby", fields: [senderId],references: [userId])
-senderId  String
-reciever  User?    @relation("recieby",fields: [receiverId],references: [userId])
-receiverId String
-message   String
-timeStamp DateTime
+model Message {
+  messageId   String   @id @default(uuid())
+  sender      User?    @relation("sendby", fields: [senderId],references: [userId])
+  senderId    String
+  receiver    User?    @relation("recieby",fields: [receiverId],references: [userId])
+  receiverId  String
+  message     String
+  timeStamp   DateTime
+  status      MsgStatus @default(PENDING)
 }
 model Post{
 postId      String @id @default(uuid())
@@ -98,7 +103,7 @@ model Comment{
 }
 model Submission {
  submissionId       String  @id @default(uuid())
- taskId             String
+ taskId             String  @unique
  userId             String
  submissionDate     DateTime
  feedback           String
@@ -107,7 +112,8 @@ model Submission {
  link               String?
  content            String?
  thumbnail          String?
-
+ task               Task     @relation(fields: [taskId], references: [taskId])
+ userSubmission     User   @relation(fields: [userId], references: [userId])
 }
 
 enum Role{
@@ -121,8 +127,13 @@ enum Status{
  IN_PROGRESS
  COMPLETED
 }
-enum Statuss{
+enum AppStatus{
   APPLIED
   ACCEPTED
   REJECTED
   }
+enum MsgStatus{
+  PENDING
+  SENT
+  READ
+}

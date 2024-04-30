@@ -1,6 +1,6 @@
-import { getTaskModel } from "../../models/taskModels/index.js";
+import { getTask2Model,getTaskModel,getTaskWAAS } from "../../models/taskModels/index.js";
 export const getTaskController = async (req, res, next) => {
-    const { taskId } = req.body;
+    const { taskId,code} = req.body;
     try {
         const task = await getTaskModel(taskId);
         if (!task) {
@@ -8,7 +8,13 @@ export const getTaskController = async (req, res, next) => {
             err.status = 404;
             return next(err);
         }
-        res.status(200).send(task);
+     if(code){//code bodyl kodthal WAAS formatted data ayrkkum
+        if(task.ownerId===req.roleData.userId){
+            res.status(200).send(await getTaskWAAS(taskId));//ownernta formatted data
+        }
+        res.status(200).send(await getTask2Model(taskId));//other user view a task 
+    }
+    res.status(200).send(await getTaskModel(taskId));//literally the record of the table task
     } catch (err) {
         return next(err);
     }

@@ -1,18 +1,15 @@
 import { prisma } from '../prisma.js';
-
-export const getAllUserAppModel = async (userId) => {
+export const taskAllAppWTAU = async (taskId) => {
   try {
     const applicationsWithUserAndTaskDetails = await prisma.application.findMany({
       where: {
-        userId: userId
+        taskId: taskId
       },
       include: {
         userApplied: true, 
-        taskApplied: true  
+        taskApplied: true 
       },
-    });
-
-    
+    });    
     return applicationsWithUserAndTaskDetails.map((application) => ({
       id: application.applicationId,
       status: application.status,

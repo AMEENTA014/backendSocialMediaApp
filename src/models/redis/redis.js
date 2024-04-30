@@ -15,6 +15,22 @@ export async function setValue(cacheServerPromise, key, value) {
     }
   }
 }
+export async function addUserNameToRedis(cacheServerPromise,userName){
+  try{
+    const cacheServer = await cacheServerPromise;
+    cacheServer.zadd('usernames', 0, userName);
+  }catch(err){
+    throw new Error("redisServerError");
+  }
+}
+export const searchUsernames=async(cacheServerPromise,prefix)=>{
+  const cacheServer=await cacheServerPromise;
+  const start = prefix;
+  const end = prefix + '\xff';
+
+  await cacheServer.zrangebylex('usernames', `[${start}`, `[${end}`,);
+}
+
 export async function setExpire(cacheServerPromise,key,time){
     try{
       const cacheServer = await cacheServerPromise;

@@ -9,5 +9,8 @@ export  * from './resetPassVerifyController.js';
 export  * from './getLeaderBoard.js';
 export  * from './getAllUserController.js';
 export  * from './googleSignIn.js';
+export  * from './getUserData.js';
+export  * from './getUserProfile.js';
+export  * from './logOutController.js';
 
 
