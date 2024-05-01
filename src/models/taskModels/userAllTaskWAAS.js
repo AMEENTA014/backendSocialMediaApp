@@ -2,7 +2,7 @@ import { prisma } from "../prisma.js";
 
 export const userAllTaskWAAS = async(userId) => {
     try {
-        return await prisma.task.findMany({
+        const tasks=await prisma.task.findMany({
             where: {
                 ownerId: userId
             },
@@ -18,12 +18,6 @@ export const userAllTaskWAAS = async(userId) => {
                     }
                 },
                 applications: {
-                    where: {
-                        OR: [
-                            { status: 'APPLIED' },
-                            { status: 'REJECTED' }
-                        ]
-                    },
                     include: {
                         userApplied: {
                             select: {
@@ -53,6 +47,45 @@ export const userAllTaskWAAS = async(userId) => {
                 }
             }
         });
+        return tasks.map(task => ({
+            taskId: task.id,
+            taskName: task.name,
+            taskDescription: task.description,
+            taskStatus: task.status,
+            owner: {
+                userId: task.owner.userId,
+                userName: task.owner.userName,
+                email: task.owner.email,
+                profilePicLink: task.owner.profilePicLink,
+                role: task.owner.role,
+                contactInfo: task.owner.contactInfo,
+            },
+            applications: task.applications.map(application => ({
+                applicationId: application.id,
+                status:application.status,
+                userApplied: {
+                    userId: application.userApplied.userId,
+                    userName: application.userApplied.userName,
+                    email: application.userApplied.email,
+                    profilePicLink: application.userApplied.profilePicLink,
+                    role: application.userApplied.role,
+                    contactInfo: application.userApplied.contactInfo,
+                }
+            })),
+            submissions: task.submissions.map(submission => ({
+                submissionId: submission.id,
+                status:submission.status,
+                userSubmission: {
+                    userId: submission.userSubmission.userId,
+                    userName: submission.userSubmission.userName,
+                    email: submission.userSubmission.email,
+                    profilePicLink: submission.userSubmission.profilePicLink,
+                    role: submission.userSubmission.role,
+                    contactInfo: submission.userSubmission.contactInfo,
+                }
+            })),
+        }));
+        
     } catch(err) {
         throw new Error("dataBaseError"+err.message);
     }

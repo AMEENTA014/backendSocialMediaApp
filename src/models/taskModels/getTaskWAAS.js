@@ -79,6 +79,7 @@ export const getTaskWAAS = async(taskId) => {
                 submissionDate: submission.submissionDate,
                 feedback: submission.feedback,
                 rating: submission.rating,
+                status:submission.status,
                 pointsAwarded: submission.pointsAwarded,
                 link: submission.link,
                 content: submission.content,

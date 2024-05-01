@@ -1,3 +1,4 @@
+import { Role } from '@prisma/client';
 import * as models from '../../models/userModels/index.js';
 export const  updateUserController=async(req,res,next)=>{
    const {userId,newUserData}=req.body;
@@ -6,7 +7,7 @@ export const  updateUserController=async(req,res,next)=>{
     err.status=400;
     return next(err);
    }
-   if(userId!==req.roleData.userId){
+   if((userId!==req.roleData.userId)&&(req.roleData.role!==Role.ADMIN)){
     const err=new Error("forbidden")
     err.status=403;
     return next(err);    

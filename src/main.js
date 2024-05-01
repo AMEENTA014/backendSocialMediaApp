@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import cookieParser  from 'cookie-parser';
 import {createClient} from 'redis';
 dotenv.config({path:"../.env"});
+import { createChatServer } from './chatApp.js';
 import routerUser from './routes/userRoute.js';
 import routerPost from './routes/postRoute.js';
 import routerLike from './routes/likeRoute.js';
@@ -11,7 +12,10 @@ import routerComment from './routes/commentRoute.js';
 import routerTask from './routes/taskRoute.js';
 import routerApplication from './routes/appRoute.js';
 import routerSub from './routes/subRoute.js';
+import routerNotify from './routes/notifyRoute.js';
+import routerRequest from './routes/requestRoute.js';
 const app=express();
+const io=createChatServer(app);
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
@@ -22,6 +26,8 @@ app.use('/api/Comment',routerComment);
 app.use('/api/Task',routerTask)
 app.use('/api/App',routerApplication);
 app.use('/api/Sub',routerSub);
+app.use('/api/Notify',routerNotify);
+app.use('/api/Request',routerRequest);
 
 let cacheServerPromise;
 const  initializeRedisClient = async () => {
@@ -37,7 +43,7 @@ const  initializeRedisClient = async () => {
 };
 initializeRedisClient().then((client)=>{
   cacheServerPromise=client;
-  app.listen(process.env.PORT,()=>{
+  io.listen(process.env.PORT,()=>{
     console.log(`${process.env.PORT}listening to port `)
   })
 }).catch(err=>console.log(err));

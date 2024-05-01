@@ -3,8 +3,8 @@ import {Role}from '@prisma/client'
 export const  createUserModel=async(user)=> 
 { 
   try{
-     if (!Object.values(Role).includes(user.role)) {
-        throw new Error(`Invalid role: ${user.role}`);
+     if (!(user.role)||!Object.values(Role).includes(user.role)) {
+        throw new Error(`Invalid role: ${user.role}or roleNotProvided`);
     }
      return await prisma.user.create({ data: 
       {

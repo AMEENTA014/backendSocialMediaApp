@@ -5,7 +5,7 @@ export const getUserAppController=async(req,res,next)=>{
         const userId=req.roleData.userId;
         //userFound? checking is avoided coz authentication ,user illenkil pass cheyyilla
         if(code){
-            res.status(200).send(await userAllAppWTAU(userId));
+           return  res.status(200).send(await userAllAppWTAU(userId));
         }
         res.status(200).send(await getUserAppModel(userId));
     }catch(err){return next(err);}

@@ -2,7 +2,7 @@ import { findLikeModel } from '../../models/likeModels/findLikeModel.js';
 import {createLikeModel} from '../../models/likeModels/index.js';
 import {getPostModel}from '../../models/postModels/index.js';
 export const createLikeController=async(req,res,next)=>{
-    const {postId,userId}=req.params;
+    const {postId,userId}=req.body;
     if (!userId||!postId) {
         const err= new Error('NoUserIdOrPostIdProvided');
         err.status=400;

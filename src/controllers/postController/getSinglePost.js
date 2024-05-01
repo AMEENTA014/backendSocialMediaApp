@@ -14,7 +14,7 @@ export const getSinglePost=async(req,res,next)=>{
         return next(err);
          }
          if(code){
-          res.status(200).send(await getPostWLAC(postId));  
+          return res.status(200).send(await getPostWLAC(postId));  
          }
     res.status(200).send(post);   
   }catch(err){

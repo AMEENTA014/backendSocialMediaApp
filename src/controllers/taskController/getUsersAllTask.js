@@ -1,6 +1,6 @@
-import { getUsersAllTaskModel } from "../../models/taskModels/getUsersAllTaskModel.js";
+import { getUsersAllTaskModel,userAllTaskWAAS } from "../../models/taskModels/index.js";
 export const getUsersAllTask = async (req, res, next) => {
-    try {
+    try {const {code}=req.body
         const userId=req.roleData.userId;
         const tasks = await getUsersAllTaskModel(userId);
         if (!tasks) {
@@ -8,7 +8,10 @@ export const getUsersAllTask = async (req, res, next) => {
             err.status = 404;
             return next(err);
         }
-        res.status(200).send(tasks);
+        if(!code){
+            return res.status(200).send(tasks);
+        }
+        res.status(200).send(await userAllTaskWAAS(userId));
     } catch (err) {
         return next(err);
     }

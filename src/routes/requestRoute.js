@@ -1,0 +1,14 @@
+import express from 'express';
+const router=express.Router();
+import * as requestController from '../controllers/pointRequestController/index.js';
+import * as middleWares from '../middleWares/index.js';
+import { servErr } from './servErr.js';
+router.use(servErr);
+router.post('/create',middleWares.authenticate,requestController.createRequestController);
+router.put('/update',middleWares.authenticate,requestController.updatePointRequestController);
+router.delete('/delete',middleWares.authenticate,requestController.deleteRequestController);
+router.get('/getAllRequest',middleWares.authenticate,requestController.getAllPointRequest);
+router.get('/getPointRequest',middleWares.authenticate,middleWares.authorize(['FACULTY','ADMIN']),requestController.getPointRequestController);
+router.post('/reqStatusChange',middleWares.authenticate,middleWares.authorize(['FACULTY','ADMIN']),requestController.ReqStatusChange);
+router.get('/getUserRequests',middleWares.authenticate,middleWares.authorize(['FACULTY','ADMIN']),requestController.getUserPointRequestController);
+export default router;

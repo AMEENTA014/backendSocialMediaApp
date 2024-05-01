@@ -1,5 +1,5 @@
 import { prisma } from "../prisma.js";
-export const getAllCommentModel=async(postId)=>{
+export const getPostAllCommentModel=async(postId)=>{
     try{
         return prisma.comment.findMany({
             where:{postId:postId}

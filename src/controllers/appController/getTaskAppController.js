@@ -14,7 +14,7 @@ export const getTaskAppController=async(req,res,next)=>{
             return next(err);
         }
         if(!code){
-            res.status(200).send(await getTaskAppModel(taskId));
+           return  res.status(200).send(await getTaskAppModel(taskId));
         }
         res.status(200).send(await taskAllAppWTAU(taskId));
     }catch(err){return next(err);}

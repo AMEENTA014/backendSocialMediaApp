@@ -18,6 +18,6 @@ router.post('/verify', userController.verifyController);
 router.post('/resetPassword', middleWares.authenticate, userController.resetPassWordController);
 router.post('/resetPassVerify', userController.verifyResetPasswordController);
 router.put('/update', middleWares.authenticate, userController.updateUserController);
-router.delete('/delete/:userId',middleWares.authenticate,userController.deleteUserController);
+router.delete('/delete',middleWares.authenticate,userController.deleteUserController);
 router.get('/leaderBoard',middleWares.authenticate,userController.getLeaderBoard);
 export default router;

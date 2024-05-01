@@ -2,7 +2,7 @@ import { prisma } from '../prisma.js';
 import {Status} from '@prisma/client';
 export const createTaskModel = async(data) => {
     try {
-        if (!Object.values(Status).includes(data.status)) {
+        if ((data.status)&&(!Object.values(Status).includes(data.status))) {
             throw new Error(`Invalid status: ${data.status}`);
         }
           const deadlineDate = new Date(data.deadline);

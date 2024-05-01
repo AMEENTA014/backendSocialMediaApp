@@ -9,7 +9,7 @@ export const getAppController = async (req, res, next) => {
             return next(err);
         }
         if(code){
-            res.status(200).send( res.status(200).send(await getAppWTAU(appId)));
+            return res.status(200).send( res.status(200).send(await getAppWTAU(appId)));
         }
         res.status(200).send(app);
     } catch (err) {

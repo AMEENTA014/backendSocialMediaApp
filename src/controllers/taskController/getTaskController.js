@@ -1,3 +1,4 @@
+import { Role } from "@prisma/client";
 import { getTask2Model,getTaskModel,getTaskWAAS } from "../../models/taskModels/index.js";
 export const getTaskController = async (req, res, next) => {
     const { taskId,code} = req.body;
@@ -9,10 +10,10 @@ export const getTaskController = async (req, res, next) => {
             return next(err);
         }
      if(code){//code bodyl kodthal WAAS formatted data ayrkkum
-        if(task.ownerId===req.roleData.userId){
-            res.status(200).send(await getTaskWAAS(taskId));//ownernta formatted data
+        if(task.ownerId===req.roleData.userId||req.roleData.role===Role.ADMIN){
+            return res.status(200).send(await getTaskWAAS(taskId));//ownernta formatted data
         }
-        res.status(200).send(await getTask2Model(taskId));//other user view a task 
+       return  res.status(200).send(await getTask2Model(taskId));//other user view a task 
     }
     res.status(200).send(await getTaskModel(taskId));//literally the record of the table task
     } catch (err) {

@@ -1,11 +1,14 @@
 import { prisma } from "../prisma.js";
-export const deleteSubModel=async(submissionId)=>{
+export const deleteSubModel = async(submissionId) => {
    try {
-       await prisma.submission.delete({where:{
+      if(!submissionId){
+         return prisma.$transaction([]); // return an empty Prisma transaction
+      }
+      const value = await prisma.submission.delete({where:{
         submissionId:submissionId
       }});
-      return true;
-   }catch(err){
-      throw new Error("databaseError")
+      return value;
+   } catch(err) {
+      throw new Error("databaseError");
    }
 }

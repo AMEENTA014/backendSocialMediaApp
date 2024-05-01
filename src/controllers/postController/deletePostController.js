@@ -1,3 +1,4 @@
+import { Role } from '@prisma/client';
 import {getPostModel,deletePostModel}from '../../models/postModels/index.js';
 export const deletePostController=async(req,res,next)=>{
     const {userId,postId}=req.body;
@@ -7,7 +8,7 @@ export const deletePostController=async(req,res,next)=>{
         return next(err);
     }
     try{
-        if ((req.roleData.userId !==userId)) {
+        if ((req.roleData.userId !==userId)&&(req.roleData.role!==Role.ADMIN)) {
             const err = new Error('Forbidden');
             err.status = 403;
             return next(err);
@@ -18,7 +19,7 @@ export const deletePostController=async(req,res,next)=>{
             err.status=404;
             return next(err);
         }
-        if (post.userId!== userId) {
+        if ((post.userId!== userId)&&(req.roleData.role!==Role.ADMIN)) {
             const err= new Error('Forbidden');
             err.status=403;
             return next(err);

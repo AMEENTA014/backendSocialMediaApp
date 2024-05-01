@@ -35,6 +35,9 @@ model User {
   likes               Like[]
   comments            Comment[]
   submissions         Submission[]
+  pointRequests       PointConversionRequest[]@relation("requested")
+  notifications       Notification[]
+  FacultyAdminReq     PointConversionRequest[]@relation("checked")
 } 
 
 model Task {
@@ -107,13 +110,41 @@ model Submission {
  userId             String
  submissionDate     DateTime
  feedback           String
- rating             Int
+ rating             Int?
  pointsAwarded      Int?
  link               String?
  content            String?
  thumbnail          String?
+ status             SubStatus @default(APPLIED)
  task               Task     @relation(fields: [taskId], references: [taskId])
  userSubmission     User   @relation(fields: [userId], references: [userId])
+}
+model PointConversionRequest {
+  requestId String      @id @default(uuid())
+  userId    String?
+  points    Int
+  message   String?
+  checkBy   String?    
+  status    AppStatus @default(APPLIED)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User?     @relation("requested",fields: [userId], references: [userId])
+  checkedBy User?     @relation("checked",fields: [checkBy], references: [userId])
+}
+model Notification {
+  notifyId       String      @id @default(uuid())
+  userId       String
+  title        String
+  newStatus    String?
+  message      String                              
+  type         String?
+  referenceId  String
+  status       MsgStatus  @default(PENDING)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User ?    @relation(fields: [userId], references: [userId])
+
+  @@index([userId], name: "userId")
 }
 
 enum Role{
@@ -136,4 +167,9 @@ enum MsgStatus{
   PENDING
   SENT
   READ
+}
+enum SubStatus{
+  APPLIED
+  ACCEPTED
+  REJECTED
 }

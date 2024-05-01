@@ -1,3 +1,4 @@
+import { Role } from '@prisma/client';
 import * as postModels from '../../models/postModels/index.js';
 export const updatePostController = async(req, res, next) => {
     const {userId, postId, newPostData} = req.body;
@@ -6,7 +7,7 @@ export const updatePostController = async(req, res, next) => {
         err.status = 400;
         return next(err);
     }
-    if (req.roleData.userId !==userId) {
+    if ((req.roleData.userId !==userId)&&(req.roleData.role!==Role.ADMIN)) {
         const err = new Error('Forbidden');
         err.status = 403;
         return next(err);
@@ -18,8 +19,7 @@ export const updatePostController = async(req, res, next) => {
             err.status = 404;
             return next(err);
         }
-        if (post.userId !== userId) {
-            (post.userId,userId)
+        if ((post.userId !== userId)&&(req.roleData.role!==Role.ADMIN)) {
             const err = new Error('Forbidden');
             err.status = 403;
             return next(err);

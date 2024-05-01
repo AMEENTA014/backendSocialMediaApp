@@ -1,6 +1,6 @@
 import {getLikeModel,deleteLikeModel} from '../../models/likeModels/index.js';
 export const deleteLikeController=async(req,res,next)=>{
-    const {userId,likeId}=req.params;
+    const {userId,likeId}=req.body;
     if (!userId || !likeId) {
         const err= new Error('NoUserIdOrLikeIdProvided');
         err.status=400;

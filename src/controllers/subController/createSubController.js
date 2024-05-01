@@ -1,5 +1,5 @@
 import { createSubModel, findSubmissionModel } from '../../models/subModels/index.js';
-import {getTaskModel,updateTaskModel}from '../../models/taskModels/index.js';
+import {getTaskModel}from '../../models/taskModels/index.js';
 export const createSubController = async (req, res, next) => {
     const { taskId, submissionContent } = req.body;
     const userId = req.roleData.userId;
@@ -32,7 +32,6 @@ export const createSubController = async (req, res, next) => {
         }
         
         const submission = await createSubModel({ userId, taskId, content: submissionContent });
-        await updateTaskModel(taskId,{status:'CLOSED'})
         res.status(201).send(submission);
     } catch (err) {
         return next(err);

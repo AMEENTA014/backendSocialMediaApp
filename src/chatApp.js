@@ -1,53 +1,59 @@
+// chat.js
+import express from 'express';
+import http from 'http';
 import { Server } from 'socket.io';
+import { PrismaClient } from '@prisma/client';
 
-export function createSocketServer(server) {
+export function createChatServer(app) {
+  const server = http.createServer(app);
   const io = new Server(server);
+  const prisma = new PrismaClient();
 
-  // Store user status (online/offline)
-  const userStatus = {};
-
+  let onlineUsers = {};
   io.on('connection', (socket) => {
-    console.log('a user connected');
+    console.log('A user connected');
 
-    // Handle user coming online
-    socket.on('online', (userId) => {
-      userStatus[userId] = 'online';
-      console.log(`User ${userId} is online`);
-    });
-
-    // Handle user going offline
-    socket.on('disconnect', (userId) => {
-      userStatus[userId] = 'offline';
-      console.log(`User ${userId} is offline`);
-    });
-
-    // Handle user joining a room
-    socket.on('join room', (room) => {
+    socket.on('join_room', async (room) => {
       socket.join(room);
+      console.log(`User joined room: ${room}`);
+      onlineUsers[socket.id] = room;
+
+      const unseenMessages = await prisma.message.findMany({
+        where: {
+          receiverId: room,
+          status: 'PENDING',
+        },
+      });
+
+   
+      socket.emit('unseen_messages', unseenMessages);
     });
 
-    // Handle user sending a message
-    socket.on('message', (room, message, userId) => {
-      // Check if the other user in the room is online
-      const otherUserId = getOtherUserInRoom(room, userId);
-      if (userStatus[otherUserId] === 'online') {
-        socket.to(room).emit('message', message);
-      } else {
-        console.log(`User ${otherUserId} is offline. Message will be stored.`);
-        // Store the message in the database for the offline user
-      }
+    socket.on('message', async (data) => {
+      io.to(data.room).emit('message', data);
+      console.log(`Message received: ${data.message}`);
+
+      await prisma.message.create({
+        data: {
+          messageId: data.messageId,
+          senderId: data.senderId,
+          receiverId: data.receiverId,
+          message: data.message,
+          timeStamp: new Date(),
+          status: onlineUsers[data.receiverId] ? 'SEEN' : 'PENDING',
+        },
+      });
+    });
+
+    socket.on('disconnect', async () => {
+      console.log('A user disconnected');
+      delete onlineUsers[socket.id];
     });
   });
-}
 
-// This is a placeholder function. You should replace this with your own logic
-// to get the other user in the room.
-function getOtherUserInRoom(room, userId) {
-  // ...
+  server.listen(3000, () => {
+    console.log('Server is running on port 3000');
+  });
+
+  return io;
 }
-console.log('implementations');
-//useroffline /online
-//getmessages for pending 
-//send messages when online 
-//delete messages 
-//update messages with time limit 

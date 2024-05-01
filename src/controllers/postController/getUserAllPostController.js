@@ -18,7 +18,7 @@ export const getUserAllPostController = async(req, res, next) => {
         return next(err);
         }
         if(!code){
-            res.status(200).send(await postModels.getUserAllPost(userId));
+            return res.status(200).send(await postModels.getUserAllPost(userId));
         }
         const posts = await postModels.userAllPostWLAC(userId);
         res.status(200).send(posts);

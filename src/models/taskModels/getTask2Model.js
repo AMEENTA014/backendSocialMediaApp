@@ -85,6 +85,7 @@ export const getTask2Model = async(taskId, userId) => {
                 submissionDate: submission.submissionDate,
                 feedback: submission.feedback,
                 rating: submission.rating,
+                status:submission.status,
                 pointsAwarded: submission.pointsAwarded,
                 link: submission.link,
                 content: submission.content,

@@ -1,13 +1,14 @@
+import { Role } from '@prisma/client';
 import * as userModels from '../../models/userModels/index.js';
 export const deleteUserController = async (req, res, next) => {
-    const { userId } = req.params; 
+    const { userId } = req.body; 
     if (!userId) {
         const err = new Error("UserIdRequired");
         err.status = 400;
         return next(err);
     }
     try {
-        if(userId !==req.roleData.userId){
+        if((userId !==req.roleData.userId)&&(req.roleData.role!==Role.ADMIN)){
           const err=new Error('forbidden');
           err.status=403;
           return next(err);
