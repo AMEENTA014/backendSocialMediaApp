@@ -63,7 +63,7 @@ export const appStatusChange = async (req, res, next) => {
         if(application.status===AppStatus.ACCEPTED){
           const updatedApp =applicationModels.updateAppModel(applicationId,{status:status});
           const updatedTask=taskModels.updateTaskModel(taskId,{selectedUser:null,status:Status.OPEN});
-          const deletedSub=await deleteSubModel(sub);
+          const deletedSub= deleteSubModel(sub);
           const createdNotify=createNotifyModel({
             userId:application.userId,
             title:`Stay Informed! Your ${task.title}Task Application Status Has Altered`,

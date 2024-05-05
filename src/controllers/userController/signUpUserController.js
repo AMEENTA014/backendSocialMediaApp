@@ -2,6 +2,7 @@ import * as userModels from '../../models/userModels/index.js';
 import * as middleWares from '../../middleWares/index.js'
 import  { setExpire, setValue } from '../../models/redis/redis.js';
 import { cacheServerPromise } from '../../main.js';
+import { prisma } from '../../models/prisma.js';
 export const signUpUserController=async(req,res,next)=>{
      const {email,username,password,role}=req.body;
       if (!email || !username || !password) {
@@ -13,6 +14,12 @@ export const signUpUserController=async(req,res,next)=>{
       const existingUser = await userModels.getUserByEmailModel( email );
       if (existingUser) {
         const err=new Error( "User already exists");
+        err.status=400;
+        return next(err);
+      }
+      const userWithSameName=await prisma.user.findUnique({where:{userName:username}});
+      if(userWithSameName){
+        const err=new Error( "userNameExists");
         err.status=400;
         return next(err);
       }

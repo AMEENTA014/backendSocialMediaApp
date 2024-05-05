@@ -10,6 +10,7 @@ export * from  './facultyAuth.js';
 export * from './sendMail.js';
 export * from  './tOtpVerify.js';
 export * from './hashPass.js';
+export * from './logger.js';
 
 
 

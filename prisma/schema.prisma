@@ -2,6 +2,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  binaryTargets = ["native","debian-openssl-1.1.x"]
 }
 
 datasource db {
@@ -38,6 +39,7 @@ model User {
   pointRequests       PointConversionRequest[]@relation("requested")
   notifications       Notification[]
   FacultyAdminReq     PointConversionRequest[]@relation("checked")
+  log                 Log[]
 } 
 
 model Task {
@@ -146,11 +148,26 @@ model Notification {
 
   @@index([userId], name: "userId")
 }
+model Log {
+  logId          String      @id @default(uuid())
+  route       String
+  requestId   String   
+  userId      String  
+  method      String? 
+  role        Role?  
+  level         String  
+  message       String   
+  data        Json?    
+  responseTime Float? 
+  createdAt   DateTime @default(now()) 
+  user        User     @relation(fields: [userId], references: [userId])
+}
 
 enum Role{
 FACULTY
 USER
 ADMIN
+UNVERIFIED
 
 }
 enum Status{ 

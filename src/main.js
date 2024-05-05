@@ -5,6 +5,7 @@ import cookieParser  from 'cookie-parser';
 import {createClient} from 'redis';
 dotenv.config({path:"../.env"});
 import { createChatServer } from './chatApp.js';
+import routerLog from './logger/getLogs.js';
 import routerUser from './routes/userRoute.js';
 import routerPost from './routes/postRoute.js';
 import routerLike from './routes/likeRoute.js';
@@ -19,6 +20,7 @@ const io=createChatServer(app);
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
+app.use('/api/ADMIN',routerLog)
 app.use('/api/User',routerUser);
 app.use('/api/Post',routerPost);
 app.use('/api/Like',routerLike);

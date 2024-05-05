@@ -26,6 +26,12 @@ export const googleSignInController = async (req, res, next) => {
 
     let user = await userModels.getUserByEmailModel(email);
     if (!user) {
+      const userWithSameName=await prisma.user.findUnique({where:{userName:username}});
+      if(userWithSameName){
+        const err=new Error( "userNameExists");
+        err.status=400;
+        return next(err);
+      }
       user = await prisma.user.create({data:{ email:email, userName:username, googleId:googleId }});
     }
     res.status(200).cookie('token',await middleWares.createToken(user),{httpOnly:true}).send('LoginSuccess');
